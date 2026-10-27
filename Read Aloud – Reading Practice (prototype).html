@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Read Aloud – Reading Practice</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Literata:opsz,wght@7..72,400;7..72,600&family=Figtree:wght@400;600;700&display=swap">
+<style>
+:root{--bg:#eaf1f4;--surface:#fff;--ink:#14262e;--muted:#5a6f78;--line:#c6d5db;--accent:#1f6f8b;--accent-ink:#fff;--mark:#ffd86b;--good:#1b7f4b;--warn:#a86400;--bad:#b3322d;--missed:#f6d3d0;--hit:#d3efdd;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f1b21;--surface:#16262e;--ink:#e6eef1;--muted:#93a8b1;--line:#2b414c;--accent:#6cc0dc;--accent-ink:#0b1a20;--mark:#8a6d1a;--good:#6fd39b;--warn:#f0b35a;--bad:#f08a84;--missed:#4a2624;--hit:#1d4430}}
+:root[data-theme="dark"]{--bg:#0f1b21;--surface:#16262e;--ink:#e6eef1;--muted:#93a8b1;--line:#2b414c;--accent:#6cc0dc;--accent-ink:#0b1a20;--mark:#8a6d1a;--good:#6fd39b;--warn:#f0b35a;--bad:#f08a84;--missed:#4a2624;--hit:#1d4430}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Figtree,system-ui,sans-serif;line-height:1.5}
+.wrap{max-width:760px;margin:0 auto;padding:20px 18px 60px}
+header{display:flex;justify-content:space-between;align-items:center;padding:8px 0 28px}
+.logo{font-family:Literata,Georgia,serif;font-weight:600;font-size:1.25rem}
+nav{display:flex;gap:18px;font-size:.95rem;color:var(--muted)}
+nav .soon{opacity:.6;cursor:not-allowed}
+h1{font-family:Literata,Georgia,serif;font-weight:600;font-size:clamp(2rem,6vw,3rem);line-height:1.15;margin:0 0 10px;letter-spacing:-.01em}
+.lead{color:var(--muted);margin:0 0 28px;max-width:52ch}
+.levels{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:22px}
+.level{background:var(--surface);border:2px solid var(--line);border-radius:12px;padding:14px;text-align:left;font:inherit;color:inherit;cursor:pointer}
+.level b{display:block;font-size:1.05rem}
+.level span{font-size:.85rem;color:var(--muted)}
+.level[aria-pressed="true"]{border-color:var(--accent);box-shadow:inset 0 -4px 0 var(--accent)}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.paper{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:26px 26px 22px}
+.meta{display:flex;justify-content:space-between;color:var(--muted);font-size:.85rem;margin-bottom:14px}
+.text{font-family:Literata,Georgia,serif;font-size:clamp(1.15rem,3.4vw,1.4rem);line-height:1.85;max-width:62ch;margin:0}
+.w{padding:1px 2px;border-radius:3px}
+.w.hit{background:var(--hit)}
+.w.miss{background:var(--missed);text-decoration:underline wavy var(--bad);text-underline-offset:4px}
+.w.now{background:var(--mark)}
+.actions{display:flex;flex-wrap:wrap;gap:10px;margin:18px 0 0;align-items:center}
+button.btn{font:inherit;font-weight:600;border-radius:999px;padding:11px 20px;border:2px solid var(--accent);cursor:pointer;background:var(--accent);color:var(--accent-ink)}
+button.btn.ghost{background:transparent;color:var(--accent)}
+button.btn[disabled]{opacity:.5;cursor:not-allowed}
+.rec{display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--bad);margin-right:8px;animation:p 1s infinite}
+@keyframes p{50%{opacity:.25}}
+@media (prefers-reduced-motion:reduce){.rec{animation:none}}
+.status{color:var(--muted);font-size:.9rem}
+.manual{margin-top:18px;display:none}
+.manual textarea{width:100%;min-height:90px;border-radius:8px;border:1px solid var(--line);background:var(--bg);color:var(--ink);font:inherit;padding:10px}
+.manual p{margin:0 0 8px;font-size:.9rem;color:var(--muted)}
+.result{margin-top:22px;border-left:6px solid var(--line);background:var(--surface);padding:18px 20px;border-radius:4px}
+.result.good{border-color:var(--good)}.result.ok{border-color:var(--warn)}.result.bad{border-color:var(--bad)}
+.result h2{font-family:Literata,Georgia,serif;margin:0 0 4px;font-size:1.5rem}
+.score{font-size:2.4rem;font-weight:700}
+.tips{margin:8px 0 0;padding-left:20px;color:var(--muted)}
+.later{margin-top:44px}
+.later h3{font-family:Literata,Georgia,serif;font-weight:600;margin:0 0 12px}
+.later div.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.todo{border:2px dashed var(--line);border-radius:8px;padding:14px;color:var(--muted);font-size:.92rem}
+.todo b{color:var(--ink);display:block}
+footer{margin-top:40px;color:var(--muted);font-size:.85rem}
+.banner{background:var(--mark);color:#14262e;border-radius:6px;padding:8px 14px;font-size:.88rem;margin-bottom:22px}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .banner{color:#fff}}
+@media(max-width:520px){.levels{grid-template-columns:1fr}.paper{padding:18px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="banner">This site is still being built. Reading checks work, but progress tracking and more are on the way.</div>
+  <header>
+    <div class="logo">Read Aloud</div>
+    <nav><a style="color:inherit" href="#practice">Practice</a><span class="soon" title="Coming soon">My progress</span><span class="soon" title="Coming soon">Sign in</span></nav>
+  </header>
+
+  <h1>Read a paragraph out loud. Find out how you did.</h1>
+  <p class="lead">Choose a level, read the paragraph, and the app will tell you which words you nailed and which need more practice.</p>
+
+  <section id="practice" aria-label="Practice">
+    <div class="levels" id="levels" role="group" aria-label="Difficulty"></div>
+
+    <div class="paper">
+      <div class="meta"><span id="lvlName"></span><span id="wc"></span></div>
+      <p class="text" id="text" aria-live="polite"></p>
+      <div class="actions">
+        <button class="btn" id="start">Start reading</button>
+        <button class="btn ghost" id="stop" disabled>Stop and check</button>
+        <button class="btn ghost" id="next">New paragraph</button>
+        <span class="status" id="status"></span>
+      </div>
+      <div class="manual" id="manual">
+        <p>Your browser can’t listen to your voice here. Type what you read instead (a quick way to test the checker), then check it.</p>
+        <textarea id="typed" placeholder="Type or paste what you read…"></textarea>
+        <div class="actions"><button class="btn" id="checkTyped">Check my reading</button></div>
+      </div>
+    </div>
+
+    <div id="result" aria-live="polite"></div>
+  </section>
+
+  <section class="later">
+    <h3>Coming next</h3>
+    <div class="grid">
+      <div class="todo"><b>Progress history</b>Scores for every session, by level.</div>
+      <div class="todo"><b>Hear it first</b>Listen to a paragraph before you read it.</div>
+      <div class="todo"><b>Practice missed words</b>A short drill of the words you stumbled on.</div>
+      <div class="todo"><b>More paragraphs</b>Right now there are only a few per level.</div>
+    </div>
+  </section>
+  <footer>Prototype · speech recognition works best in Chrome and Edge.</footer>
+</div>
+
+<script>
+const LEVELS={
+ easy:{name:'Easy',hint:'Short, simple words',texts:[
+  'The sun came up over the hill. A small dog ran across the green grass. He found a red ball and brought it back to the boy.',
+  'Mia has a cat named Pip. Every morning Pip sits by the window and watches the birds. When Mia comes home, Pip jumps down to say hello.']},
+ medium:{name:'Medium',hint:'Longer sentences',texts:[
+  'On Saturday morning, the market was busy with people carrying baskets of fruit and vegetables. A musician played the guitar near the fountain while children chased bubbles across the square.',
+  'The library closes early on Fridays, so Daniel decided to return his books before lunch. He walked slowly along the river, enjoying the cool breeze and the sound of the water.']},
+ hard:{name:'Hard',hint:'Tricky words and rhythm',texts:[
+  'Despite the unpredictable weather, the expedition proceeded through the mountainous terrain, where meticulous preparation and unwavering determination proved essential for the entire team.',
+  'The archaeologist examined the ancient manuscript with extraordinary caution, recognizing that even a minor mistake could irreversibly damage a document that had survived for centuries.']}
+};
+let level='easy',idx=0,words=[],rec=null,heard='',listening=false;
+const $=id=>document.getElementById(id);
+const norm=s=>s.toLowerCase().replace(/[’']/g,'').replace(/[^a-z0-9\s]/g,' ').split(/\s+/).filter(Boolean);
+
+function renderLevels(){
+  $('levels').innerHTML='';
+  for(const k in LEVELS){
+    const b=document.createElement('button');b.className='level';b.setAttribute('aria-pressed',k===level);
+    b.innerHTML='<b>'+LEVELS[k].name+'</b><span>'+LEVELS[k].hint+'</span>';
+    b.onclick=()=>{level=k;idx=0;renderLevels();renderText()};
+    $('levels').appendChild(b);
+  }
+}
+function renderText(){
+  const t=LEVELS[level].texts[idx%LEVELS[level].texts.length];
+  words=t.split(/\s+/);
+  $('text').innerHTML=words.map((w,i)=>'<span class="w" id="w'+i+'">'+w+'</span>').join(' ');
+  $('lvlName').textContent=LEVELS[level].name+' level';
+  $('wc').textContent=words.length+' words';
+  $('result').innerHTML='';$('status').textContent='';$('typed').value='';
+}
+// Align spoken words to paragraph words with LCS
+function align(target,spoken){
+  const n=target.length,m=spoken.length;
+  const d=Array.from({length:n+1},()=>new Array(m+1).fill(0));
+  for(let i=n-1;i>=0;i--)for(let j=m-1;j>=0;j--)
+    d[i][j]=target[i]===spoken[j]?d[i+1][j+1]+1:Math.max(d[i+1][j],d[i][j+1]);
+  const hit=new Array(n).fill(false);let i=0,j=0;
+  while(i<n&&j<m){if(target[i]===spoken[j]){hit[i]=true;i++;j++}else if(d[i+1][j]>=d[i][j+1])i++;else j++}
+  return hit;
+}
+function check(spokenText){
+  const target=words.map(w=>norm(w).join(''));
+  const spoken=norm(spokenText);
+  const hit=align(target,spoken);
+  const got=hit.filter(Boolean).length;
+  const pct=Math.round(got/target.length*100);
+  words.forEach((_,i)=>{const el=$('w'+i);el.className='w '+(hit[i]?'hit':'miss')});
+  const missed=words.filter((_,i)=>!hit[i]).map(w=>w.replace(/[^\w’'-]/g,''));
+  let cls,title,msg;
+  if(pct>=90){cls='good';title='Great reading!';msg='You read almost every word correctly. Try the next level or a new paragraph.'}
+  else if(pct>=70){cls='ok';title='Good, but you can improve';msg='You got most of it. Slow down a little and focus on the underlined words.'}
+  else {cls='bad';title='Needs more practice';msg='Several words were missed or unclear. Read it again, one sentence at a time.'}
+  let tips='';
+  if(missed.length)tips='<ul class="tips"><li>Words to practice: '+missed.slice(0,10).join(', ')+(missed.length>10?'…':'')+'</li></ul>';
+  $('result').innerHTML='<div class="result '+cls+'"><div class="score">'+pct+'%</div><h2>'+title+'</h2><div>'+msg+'</div>'+tips+'</div>';
+  $('result').scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+// Speech recognition
+const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+if(!SR)$('manual').style.display='block';
+$('start').onclick=()=>{
+  if(!SR){$('status').textContent='Voice not supported here. Use the box below.';return}
+  renderText();heard='';
+  rec=new SR();rec.lang='en-US';rec.continuous=true;rec.interimResults=true;
+  rec.onresult=e=>{heard='';for(const r of e.results)heard+=r[0].transcript+' ';};
+  rec.onerror=e=>{$('status').textContent=(e.error==='not-allowed'||e.error==='service-not-allowed')?'Microphone blocked. Allow access, or type your reading below.':'Something went wrong: '+e.error;if(e.error==='not-allowed'||e.error==='service-not-allowed')$('manual').style.display='block';stopUI()};
+  rec.onend=()=>{if(listening){listening=false;stopUI();check(heard)}};
+  try{rec.start();listening=true;$('start').disabled=true;$('stop').disabled=false;$('status').innerHTML='<span class="rec"></span>Listening… read the paragraph'}catch(e){$('status').textContent='Could not start the microphone.'}
+};
+function stopUI(){$('start').disabled=false;$('stop').disabled=true;if(!listening&&!$('status').textContent.startsWith('Mic')&&!$('status').textContent.startsWith('Some'))$('status').textContent=''}
+$('stop').onclick=()=>{if(rec)rec.stop()};
+$('checkTyped').onclick=()=>{if(!$('typed').value.trim()){$('status').textContent='Type what you read first.';return}check($('typed').value)};
+$('next').onclick=()=>{idx++;renderText()};
+renderLevels();renderText();
+</script>
+</body>
+</html>
